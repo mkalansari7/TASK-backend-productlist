@@ -1,12 +1,15 @@
+//? Import Express
 const express = require("express");
-const products = require("./data/data");
 const app = express();
-
+//? Use Middle-ware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//? Import Router
+const productsRouter = require("./routes/products.router");
+//? Use Controller
+app.use("/api/products", productsRouter);
+//? Listen PORT 
 const PORT = 8000;
 app.listen(PORT, () => {
 	console.log(`The application is running on ${PORT}`);
-
-	app.get("/api/products", (req, res) => {
-		res.json(products);
-	});
 });
