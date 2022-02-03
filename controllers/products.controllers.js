@@ -1,11 +1,19 @@
 //? Import Data
-const productsData = require("../data/data");
+// const productsData = require("../data/data");
+var slugify = require("slugify");
 //? Set Data
-let products = productsData;
+let products = [];
+
+const Product = require("../database/models/Product");
 
 //? Set Controllers
-exports.fetchProductsController = (req, res) => {
-	res.json(products);
+exports.fetchProductsController = async (req, res) => {
+	try {
+		products = await Product.find();
+		res.json(products);
+	} catch (err) {
+		res.status(500).send("error: " + err);
+	}
 };
 exports.fetchSingleProductController = (req, res) => {
 	const { slug } = req.params;
@@ -32,12 +40,13 @@ exports.addProductController = (req, res) => {
 		// id: Math.floor(Math.random() * 1000),
 		id: products[products.length - 1].id + 1,
 		name,
-		slug: name.toLowerCase().split(" ").join("-"),
+		// slug: name.toLowerCase().split(" ").join("-"),
+		slug: slugify(name, { lower: true }),
 		image,
 		description,
 		color,
-		quantity,
-		price,
+		quantity: +quantity,
+		price: +price,
 	};
 	if (products.find(prod => prod.slug !== product.slug)) {
 		products = [...products, product];
