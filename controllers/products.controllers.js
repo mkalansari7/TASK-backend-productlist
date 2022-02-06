@@ -1,57 +1,72 @@
 //? Import Data
 // const productsData = require("../data/data");
-var slugify = require("slugify");
+
 //? Set Data
-let products = [];
 
 const Product = require("../database/models/Product");
 
 //? Set Controllers
 exports.fetchProductsController = async (req, res) => {
 	try {
-		products = await Product.find();
+		const products = await Product.find();
 		res.json(products);
 	} catch (err) {
-		res.status(500).send("error: " + err);
+		res.status(500).json({ msg: error.message });
 	}
 };
-exports.fetchSingleProductController = (req, res) => {
+exports.fetchSingleProductController = async (req, res) => {
 	const { slug } = req.params;
-	const product = products.find(product => product.slug === slug);
-	if (product) {
-		res.json(product);
-	} else {
-		res.status(404).send("Product not found");
+	try {
+		const product = await Product.findOne({ slug: slug });
+		if (product) {
+			res.status(200).json({ msg: product });
+		} else {
+			res.status(404).send("Product not found");
+		}
+	} catch (error) {
+		res.status(500).json({ msg: error.message });
 	}
 };
-exports.deleteProductController = (req, res) => {
-	const { slug } = req.params;
-	const product = products.find(product => product.slug === slug);
-	if (product) {
-		products = products.filter(product => product.slug !== slug);
-		res.status(204).send("Product Deleted");
-	} else {
-		res.status(404).send("Product not found");
+exports.deleteProductController = async (req, res) => {
+	const { productId } = req.params;
+	try {
+		const deletedProduct = await Product.findByIdAndDelete(productId);
+		if (deletedProduct) {
+			res.status(204).end();
+		} else {
+			res.status(404).json({ msg: "Product Not Found" });
+		}
+	} catch (error) {
+		res.status(500).json({ msg: error.message });
 	}
 };
-exports.addProductController = (req, res) => {
-	const { name, image, description, color, quantity, price } = req.body;
-	const product = {
-		// id: Math.floor(Math.random() * 1000),
-		id: products[products.length - 1].id + 1,
-		name,
-		// slug: name.toLowerCase().split(" ").join("-"),
-		slug: slugify(name, { lower: true }),
-		image,
-		description,
-		color,
-		quantity: +quantity,
-		price: +price,
-	};
-	if (products.find(prod => prod.slug !== product.slug)) {
-		products = [...products, product];
-		res.status(201).send("Product Created");
-	} else {
-		res.status(302).send("Product Already Exist");
+exports.addProductController = async (req, res) => {
+	const product = req.body;
+	try {
+		const createdProduct = await Product.create(product);
+		res.status(200).json({ msg: "Product Created", payload: createdProduct });
+	} catch (error) {
+		res.status(500).json({ msg: error.message });
+	}
+};
+
+exports.updateProductController = async (req, res) => {
+	const { productId } = req.params;
+	const product = req.body;
+	try {
+		const updatedProduct = await Product.findByIdAndUpdate(productId, product, {
+			runValidators: true,
+			new: true,
+		});
+		if (updatedProduct) {
+			res.status(200).json({
+				msg: "Product Updated",
+				payload: updatedProduct,
+			});
+		} else {
+			res.status(404).json({ msg: "Product Not Found" });
+		}
+	} catch (error) {
+		res.status(500).json({ msg: error.message });
 	}
 };

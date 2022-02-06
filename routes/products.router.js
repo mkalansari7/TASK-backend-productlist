@@ -6,13 +6,15 @@ const {
 	fetchSingleProductController,
 	deleteProductController,
 	addProductController,
+	updateProductController,
 } = require("../controllers/products.controllers");
 //? Set Router
 const productsRouter = express.Router();
 //? Assign Router to Controllers
 productsRouter.get("/", fetchProductsController);
 productsRouter.get("/:slug", fetchSingleProductController);
-productsRouter.delete("/:slug", deleteProductController);
+productsRouter.delete("/:productId", deleteProductController);
 productsRouter.post("/", addProductController);
+productsRouter.put("/:productId", updateProductController);
 //? Export Router
 module.exports = productsRouter;
