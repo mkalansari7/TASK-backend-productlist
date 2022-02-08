@@ -8,7 +8,10 @@ const ProductSchema = new Schema(
 			required: true,
 		},
 		slug: String,
-		image: String,
+		image: {
+			type: String,
+			required: true,
+		},
 		description: String,
 		color: String,
 		quantity: {

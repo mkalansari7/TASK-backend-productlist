@@ -1,20 +1,35 @@
-// const password = gy5lGfcYhiqigTqN;
-//? Import Express
+//? Imports
 const express = require("express");
-const connectDB = require("./database");
 const app = express();
-
+const connectDB = require("./database");
 const dotenv = require("dotenv");
 dotenv.config();
 
-//? Use Middle-ware
+//? Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//? Import Router
+app.use((req, res, next) => {
+	console.log(`${req.method} ${req.protocol}://${req.get("host")}${req.path}`);
+	next();
+});
+//? Router
 const productsRouter = require("./routes/products.router");
-//? Use Controller
 app.use("/api/products", productsRouter);
-//? Listen PORT
+
+//? Error handler Middleware
+app.use((err, req, res, next) => {
+	res
+		.status(err.status || 500)
+		.json({ msg: err.message || "Internal Server Error" });
+	next();
+});
+
+//? Not Found Middleware
+app.use((req, res, next) => {
+	res.status(404).json({ msg: "Path Not Found" });
+});
+
+//? PORT and Listen
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`The application is running on ${PORT}`);
