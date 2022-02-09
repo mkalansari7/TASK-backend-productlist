@@ -29,4 +29,5 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=name%>" });
+
 module.exports = model("Product", ProductSchema);

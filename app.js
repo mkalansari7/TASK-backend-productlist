@@ -1,20 +1,28 @@
 //? Imports
 const express = require("express");
-const app = express();
 const connectDB = require("./database");
 const dotenv = require("dotenv");
+const cors = require("cors");
+const path = require("path");
 dotenv.config();
+
+const app = express();
+app.use(cors());
 
 //? Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
 	console.log(`${req.method} ${req.protocol}://${req.get("host")}${req.path}`);
 	next();
 });
+
 //? Router
 const productsRouter = require("./routes/products.router");
 app.use("/api/products", productsRouter);
+
+app.use("/media", express.static(path.join(__dirname, "media")));
 
 //? Error handler Middleware
 app.use((err, req, res, next) => {
