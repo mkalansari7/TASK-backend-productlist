@@ -5,11 +5,10 @@ const {
 	fetchProductsController,
 	fetchSingleProductController,
 	deleteProductController,
-	addProductController,
 	updateProductController,
 	fetchProduct,
 } = require("../controllers/products.controllers");
-const upload = require("../middleware/multer");
+const upload = require("../../../middleware/multer");
 
 //? Set Router
 const productsRouter = express.Router();
@@ -30,7 +29,7 @@ productsRouter.param("productId", async (req, res, next, productId) => {
 //? Assign Router to Controllers
 productsRouter.get("/", fetchProductsController);
 productsRouter.delete("/:productId", deleteProductController);
-productsRouter.post("/", upload.single("image"), addProductController);
+productsRouter.get("/:productId", fetchSingleProductController);
 productsRouter.put(
 	"/:productId",
 	upload.single("image"),

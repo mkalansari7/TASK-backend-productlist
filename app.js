@@ -19,8 +19,11 @@ app.use((req, res, next) => {
 });
 
 //? Router
-const productsRouter = require("./routes/products.router");
+const productsRouter = require("./api/products/routes/products.router");
 app.use("/api/products", productsRouter);
+
+const shopsRouter = require("./api/shops/routes/shops.router");
+app.use("/api/shops", shopsRouter);
 
 app.use("/media", express.static(path.join(__dirname, "media")));
 

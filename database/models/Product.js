@@ -22,6 +22,10 @@ const ProductSchema = new Schema(
 			type: Number,
 			default: 10,
 		},
+		shop: {
+			type: Schema.Types.ObjectId,
+			ref: "Shop",
+		},
 	},
 	{
 		timestamps: true,
