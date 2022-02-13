@@ -4,6 +4,8 @@ const connectDB = require("./database");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
+const passport = require("passport");
+const { localStrategy } = require("./middleware/passport");
 dotenv.config();
 
 const app = express();
@@ -12,6 +14,8 @@ app.use(cors());
 //? Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+passport.use(localStrategy);
 
 app.use((req, res, next) => {
 	console.log(`${req.method} ${req.protocol}://${req.get("host")}${req.path}`);
@@ -19,11 +23,17 @@ app.use((req, res, next) => {
 });
 
 //? Router
-const productsRouter = require("./api/products/routes/products.router");
+const productsRouter = require("./api/products/products.router");
 app.use("/api/products", productsRouter);
 
-const shopsRouter = require("./api/shops/routes/shops.router");
+const shopsRouter = require("./api/shops/shops.router");
 app.use("/api/shops", shopsRouter);
+
+const tagsRouter = require("./api/tags/tags.router");
+app.use("/api/tags", tagsRouter);
+
+const usersRouter = require("./api/users/users.router");
+app.use("", usersRouter);
 
 app.use("/media", express.static(path.join(__dirname, "media")));
 

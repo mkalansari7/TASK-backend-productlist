@@ -7,8 +7,8 @@ const {
 	deleteProductController,
 	updateProductController,
 	fetchProduct,
-} = require("../controllers/products.controllers");
-const upload = require("../../../middleware/multer");
+} = require("./products.controllers");
+const upload = require("../../middleware/multer");
 
 //? Set Router
 const productsRouter = express.Router();

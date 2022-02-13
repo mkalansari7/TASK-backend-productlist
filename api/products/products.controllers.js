@@ -1,4 +1,4 @@
-const Product = require("../../../database/models/Product");
+const Product = require("../../database/models/Product");
 
 exports.fetchProduct = async (productId, next) => {
 	try {

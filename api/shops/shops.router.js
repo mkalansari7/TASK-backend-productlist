@@ -9,8 +9,8 @@ const {
 	updateShopController,
 	fetchShop,
 	addProductController,
-} = require("../controllers/shops.controllers");
-const upload = require("../../../middleware/multer");
+} = require("./shops.controllers");
+const upload = require("../../middleware/multer");
 
 //? Set Router
 const shopsRouter = express.Router();
@@ -34,6 +34,10 @@ shopsRouter.delete("/:shopId", deleteShopController);
 shopsRouter.get("/:shopId", fetchSingleShopController);
 shopsRouter.post("/", upload.single("image"), addShopController);
 shopsRouter.put("/:shopId", upload.single("image"), updateShopController);
-shopsRouter.post("/:shopId/products", upload.single("image"), addProductController);
+shopsRouter.post(
+	"/:shopId/products",
+	upload.single("image"),
+	addProductController
+);
 //? Export Router
 module.exports = shopsRouter;

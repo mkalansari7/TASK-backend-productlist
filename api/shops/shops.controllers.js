@@ -1,5 +1,5 @@
-const Product = require("../../../database/models/Product");
-const Shop = require("../../../database/models/Shop");
+const Product = require("../../database/models/Product");
+const Shop = require("../../database/models/Shop");
 
 exports.fetchShop = async (shopId, next) => {
 	try {
